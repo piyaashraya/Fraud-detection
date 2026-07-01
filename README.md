@@ -64,9 +64,7 @@ So instead of accuracy, I used these four metrics:
 
 **ROC-AUC** — measures how well the model separates fraud from legit overall. A score of 1.0 is perfect, 0.5 is no better than random guessing.
 
-Precision and recall pull against each other. If you make the model more aggressive, it catches more fraud (recall goes up) but also blocks more innocent customers (precision goes down). Finding the right balance is a business decision, not just a math problem.
-
-\---
+Precision and recall pull against each other. If you make the model more aggressive, it catches more fraud (recall goes up) but also blocks more innocent customers (precision goes down). ---
 
 ## Phase 2 — Cleaning and preparing the data
 
@@ -102,7 +100,7 @@ Median:  $11     ← actually represents a typical transaction
 
 **For text columns → I used the mode (most common value)**
 
-You cannot take a median of "Visa" or "Mastercard" — they are words. The most common value is the safest guess for what a missing entry probably was.
+You cannot take a median of "Visa" or "Mastercard" as they are words. The most common value is the safest guess for what a missing entry probably was.
 
 Result: 0 missing values remaining.
 
@@ -110,7 +108,7 @@ Result: 0 missing values remaining.
 
 ### Converting text to numbers
 
-Models only understand numbers — not words like "Visa" or "W". I used a Label Encoder to turn each unique word into a number alphabetically:
+Models only understand numbers, not words like "Visa" or "W". I used a Label Encoder to turn each unique word into a number alphabetically:
 
 ```
 "Amex"       → 0
@@ -127,7 +125,7 @@ Models only understand numbers — not words like "Visa" or "W". I used a Label 
 
 I split the data 80% for training and 20% for testing using `stratify=y`.
 
-Why stratify? Without it, the random split might put most fraud cases in one set. Stratify makes sure both sets have the same 3.5% fraud rate — so the test results reflect what would happen in the real world.
+Why stratify? Without it, the random split might put most fraud cases in one set. Stratify makes sure both sets have the same 3.5% fraud rate, so the test results reflect what would happen in the real world.
 
 ```
 Training set:  472,432 rows — 3.50% fraud
@@ -157,7 +155,7 @@ After SMOTE:  455,902 fraud vs 455,902 legit  ← perfectly balanced
 
 \---
 
-## Phase 3 — First models (baselines)
+## Phase 3 — Baseline models
 
 I started with two simple models to get a starting point to compare better models against.
 
@@ -199,7 +197,7 @@ Is the amount < $50?
 |Fraud F1|0.37|
 |ROC-AUC|0.8146|
 
-Precision jumped from 0.10 to 0.30 — 3x better. But recall dropped. The tree is more careful about what it flags, so it misses more fraud but causes fewer false alarms. This is the precision-recall tradeoff in action.
+Precision jumped from 0.10 to 0.30 thats 3x better. But recall dropped. The tree is more careful about what it flags, so it misses more fraud but causes fewer false alarms. This is the precision-recall tradeoff in action.
 
 ### Baseline comparison
 
@@ -241,16 +239,16 @@ This is called gradient boosting. It is one of the most powerful techniques in m
 
 ```python
 XGBClassifier(
-    n\\\_estimators=120,    # build 120 trees total
-    max\\\_depth=8,         # each tree can ask 8 levels of questions
-    learning\\\_rate=0.4,   # how aggressively each tree fixes the last one's mistakes
-    random\\\_state=42,     # makes results the same every time you run it
-    eval\\\_metric='logloss', # what to measure internally while training
+    n\\\\\\\_estimators=120,    # build 120 trees total
+    max\\\\\\\_depth=8,         # each tree can ask 8 levels of questions
+    learning\\\\\\\_rate=0.4,   # how aggressively each tree fixes the last one's mistakes
+    random\\\\\\\_state=42,     # makes results the same every time you run it
+    eval\\\\\\\_metric='logloss', # what to measure internally while training
     verbosity=0          # turns off the wall of text XGBoost prints while training
 )
 ```
 
-**Why `learning\\\_rate=0.4`?**
+**Why `learning\\\\\\\_rate=0.4`?**
 A high learning rate means each tree makes big corrections to the previous one's mistakes. Lower rates are more careful but need more trees. I experimented with different values and 0.4 gave the best results here.
 
 **Why `verbosity=0`?**
@@ -311,7 +309,7 @@ Key finding from the dot plot: low transaction amounts and low C14 values are th
 * V87 pushed fraud score up by +0.97 (biggest red flag)
 * V258 pushed it up by +0.84
 * D3 tried to pull it back by -0.87
-* But the red flags won — final score 1.787, flagged as fraud
+* But the red flags won, final score 1.787, flagged as fraud
 
 This is the kind of explanation a bank could give to a regulator or a customer.
 
@@ -340,7 +338,7 @@ cd Fraud-detection
 pip install pandas numpy matplotlib seaborn scikit-learn xgboost shap imbalanced-learn jupyter
 ```
 
-Download the data from [Kaggle](https://www.kaggle.com/competitions/ieee-fraud-detection/data) and put `train\\\_transaction.csv` and `train\\\_identity.csv` in the `data/` folder.
+Download the data from [Kaggle](https://www.kaggle.com/competitions/ieee-fraud-detection/data) and put `train\\\\\\\_transaction.csv` and `train\\\\\\\_identity.csv` in the `data/` folder.
 
 ```bash
 jupyter notebook
